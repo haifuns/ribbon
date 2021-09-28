@@ -743,6 +743,9 @@ public class BaseLoadBalancer extends AbstractLoadBalancer implements
             return null;
         } else {
             try {
+
+                // 按照负载均衡策略选择服务器
+                // 默认rule是RoundRobinRule 轮询策略，spring cloud 默认使用的ZoneAvoidanceRule
                 return rule.choose(key);
             } catch (Exception e) {
                 logger.warn("LoadBalancer [{}]:  Error choosing server for key {}", name, key, e);
@@ -909,6 +912,8 @@ public class BaseLoadBalancer extends AbstractLoadBalancer implements
                     // this
                     // serially
                     if (ping != null) {
+
+                        // spring cloud中 ribbon整合eureka后默认使用的IPing组件是NIWSDiscoveryPing
                         results[i] = ping.isAlive(servers[i]);
                     }
                 } catch (Exception e) {

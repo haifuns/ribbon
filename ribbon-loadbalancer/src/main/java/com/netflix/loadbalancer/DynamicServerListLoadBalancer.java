@@ -250,6 +250,7 @@ public class DynamicServerListLoadBalancer<T extends Server> extends BaseLoadBal
     }
 
     /**
+     * 从eureka拉取服务实例信息
      * Update the AllServer list in the LoadBalancer if necessary and enabled
      * 
      * @param ls
@@ -264,6 +265,8 @@ public class DynamicServerListLoadBalancer<T extends Server> extends BaseLoadBal
                                       // of having to wait out the ping cycle.
                 }
                 setServersList(ls);
+
+                // 服务实例存活检查，ping
                 super.forceQuickPing();
             } finally {
                 serverListUpdateInProgress.set(false);

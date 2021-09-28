@@ -151,10 +151,13 @@ public class ZoneAwareLoadBalancer<T extends Server> extends DynamicServerListLo
             Set<String> availableZones = ZoneAvoidanceRule.getAvailableZones(zoneSnapshot, triggeringLoad.getOrDefault(), triggeringBlackoutPercentage.getOrDefault());
             logger.debug("Available zones: {}", availableZones);
             if (availableZones != null &&  availableZones.size() < zoneSnapshot.keySet().size()) {
+                // 选择一个机房
                 String zone = ZoneAvoidanceRule.randomChooseZone(zoneSnapshot, availableZones);
                 logger.debug("Zone chosen: {}", zone);
                 if (zone != null) {
+                    // 核心处理，从指定机房中选择一个loadbalancer
                     BaseLoadBalancer zoneLoadBalancer = getLoadBalancer(zone);
+                    // 使用loadbalancer按照负载均衡策略选择服务器
                     server = zoneLoadBalancer.chooseServer(key);
                 }
             }
